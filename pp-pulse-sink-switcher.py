@@ -3,7 +3,7 @@ import Tkinter as tk
 import subprocess
 import re
 
-class Application(tk.Frame):
+class PpPulseSinkSwitcher(tk.Frame):
 
     class Sink(object):
         display = ""
@@ -66,6 +66,6 @@ class Application(tk.Frame):
         for index in inputsIndexes:
             subprocess.check_output(['pacmd', 'move-sink-input', index, sink.name])
 
-sinkSwitcher = Application()
+sinkSwitcher = PpPulseSinkSwitcher()
 sinkSwitcher.master.title('Pulse Sink & Input Switcher')
 sinkSwitcher.mainloop()
