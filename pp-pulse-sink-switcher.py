@@ -71,11 +71,18 @@ class PpPulseSinkSwitcher(tk.Frame):
 
     # set default sink and redirect all inputs to selected sink
     def changeSink(self, sink, var):
+        self.muteAllSinks(); # mute all sinks
         subprocess.check_output(['pacmd', 'set-default-sink', sink.name]) # set default sink by its name
         output = subprocess.check_output(['pacmd', 'list-sink-inputs']) # get information about all inputs
         inputsIndices = re.findall(".*index: (.*)", output) # put all inputs indices into array
-        for index in inputsIndices:
+        for index in inputsIndices: # loop through all inputs and send them to selected sink
             subprocess.check_output(['pacmd', 'move-sink-input', index, sink.name])
+        subprocess.check_output(['pactl', 'set-sink-mute', sink.name, '0']) # unmute selected sink
+
+    # mute all sinks
+    def muteAllSinks(self):
+        for sink in self.sinks: # loop through all sinks
+            subprocess.check_output(['pactl', 'set-sink-mute', sink.name, '1']) # mute sink
 
 sinkSwitcher = PpPulseSinkSwitcher() # new instance
 sinkSwitcher.master.title('Pulse Sink & Input Switcher') # set title
